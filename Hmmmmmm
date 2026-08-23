@@ -1,4 +1,31 @@
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+-- Safe Rayfield loader — prevents "attempt to call a nil value" if the URL
+-- is temporarily down or returns a non-compilable response.
+local Rayfield
+do
+    local URLS = {
+        "https://sirius.menu/rayfield",           -- primary
+        "https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/main/source.lua", -- fallback
+    }
+    local loaded, chunk, err
+    for _, url in ipairs(URLS) do
+        local ok, body = pcall(game.HttpGet, game, url)
+        if ok and type(body) == "string" and #body > 100 then
+            chunk, err = loadstring(body)
+            if chunk then
+                local callOk, result = pcall(chunk)
+                if callOk then
+                    loaded  = true
+                    Rayfield = result
+                    break
+                end
+            end
+        end
+    end
+    if not loaded then
+        -- Surface a readable error instead of a silent "attempt to call a nil value"
+        error("[Exodus] Failed to load Rayfield UI library.\nMake sure HTTP requests are allowed in your executor and try again.\nDetails: " .. tostring(err), 0)
+    end
+end
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -17,7 +44,7 @@ local detectedPlayers = {}
 local layTrack = nil
 local layAnim = Instance.new("Animation")
 layAnim.AnimationId = "rbxassetid://4686922869"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/CratosHub-Dev/Blow97/refs/heads/main/BigBang"))()
+
 local ExodusBlue = Color3.fromRGB(0, 162, 255)
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.Name = "ExodusFloatingUI"
@@ -549,26 +576,5 @@ end
 
 local function getCombatData()
     local char = lp.Character
-    local myHRP = char and char:FindFirstChild("HumanoidRootPart")
-    local arm = char and (char:FindFirstChild("Right Arm") or char:FindFirstChild("RightHand"))
-    if not myHRP or not arm then return nil end
-
-    local target = nil
-    for _, p in ipairs(game.Players:GetPlayers()) do
-        if p ~= lp and p.Character then
-            if p.Character:FindFirstChild("Knife") or (p:FindFirstChild("Backpack") and p.Backpack:FindFirstChild("Knife")) then
-                target = p
-                break
-            end
-        end
-    end
-
-    if not target or not target.Character:FindFirstChild("HumanoidRootPart") then return nil end
-
-    local root = target.Character.HumanoidRootPart
-    local velocity = root.AssemblyLinearVelocity
-    local activeMethod = _G.ShootingMethod
-
-    if activeMethod == "New (blatant)" and _G.SilentAimWallCheck then
-        local visible = false
-        local partsToCheck = {target.Character:FindFirstChild("
+    local myHRP = cha
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CratosHub-Dev/Blow97/refs/heads/main/BigBang"))()
